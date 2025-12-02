@@ -1,0 +1,601 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Health Care Center</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+  </head>
+
+  <style>
+
+        .logo {
+            width: 50px;
+            height: 50px;
+            color: black;
+            margin-top: 0;
+            margin-left: 2px;
+        }
+
+        .myimg {
+            width: 50px;
+            height: 50px;
+            border: 2px solid black;
+            border-radius: 25px;
+        }
+
+        /* Chatbot styles */
+       /* Stylish Chatbot Styles */
+#chatbot-icon {
+    position: fixed;
+    bottom: 25px;
+    right: 25px;
+    z-index: 10000;
+}
+
+.btn-glow {
+    width: 65px;
+    height: 65px;
+    font-size: 28px;
+    background: linear-gradient(135deg, #4facfe, #00f2fe);
+    color: white;
+    border: none;
+    box-shadow: 0 4px 20px rgba(0, 242, 254, 0.6);
+    transition: transform 0.2s ease-in-out;
+}
+
+.btn-glow:hover {
+    transform: scale(1.1);
+}
+
+#chatbot-window {
+    display: none;
+    position: fixed;
+    bottom: 100px;
+    right: 30px;
+    width: 330px;
+    height: 460px;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 20px;
+    box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+    z-index: 10000;
+    overflow: hidden;
+    animation: fadeIn 0.4s ease-in-out;
+}
+
+.chat-header {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    padding: 12px 16px;
+    color: white;
+    font-size: 1.1rem;
+    font-weight: bold;
+    border-radius: 20px 20px 0 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.chat-messages {
+    padding: 12px;
+    height: 330px;
+    overflow-y: auto;
+    color: #fff;
+    font-size: 0.95rem;
+}
+
+.chat-input {
+    padding: 12px;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}        .chat-input input {
+            flex-grow: 1;
+            border-radius: 25px;
+            padding: 10px 15px;
+            border: 1px solid #ccc;
+        }
+        
+        /* Message Bubbles */
+.bot-msg, .user-msg {
+    background-color: rgba(255,255,255,0.15);
+    padding: 10px 14px;
+    margin: 6px 0;
+    border-radius: 15px;
+    max-width: 85%;
+    backdrop-filter: blur(8px);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.bot-msg {
+    color: #ffffff;
+    background: linear-gradient(145deg, #6dd5ed, #2193b0);
+    align-self: flex-start;
+}
+
+.user-msg {
+    background: rgba(255, 255, 255, 0.8);
+    color: #000;
+    align-self: flex-end;
+    margin-left: auto;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideIn {
+    from { opacity: 0; transform: translateX(100%); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+ </style>
+
+
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark" style="background: linear-gradient(135deg, #1E3C72, #2A5298); box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);">
+        <div class="container-fluid">
+            <!-- Logo at the top-left corner -->
+            <div class="logo d-flex align-items-center">
+                <img class="myimg" src="{{url_for('static',filename= 'logo.jpeg')}}" alt="" style="height: 50px; width: auto; border-radius: 5px;">
+                <a class="navbar-brand ms-2" href="#" style="font-size: 1.5rem; font-weight: bold; color: white;"></a>
+            </div>
+    
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="#" style="color: #FFD700; font-weight: bold;">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="about">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="contact">Contact</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="developer">Developer</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="blog">Blog</a>
+                    </li>                </ul>
+                <!-- Login/User section -->
+                <div class="d-flex align-items-center me-3">
+                    {% if session.logged_in %}
+                        <span class="text-light me-3">Welcome, {{ session.user_name }}!</span>
+                        <a href="/logout" class="btn btn-outline-light" style="border-radius: 20px;">Logout</a>
+                    {% else %}
+                        <a href="/login" class="btn btn-primary" style="border-radius: 20px; background: linear-gradient(135deg, #667eea, #764ba2); border: none; text-decoration: none;">LOGIN</a>
+                    {% endif %}
+                </div>
+                <form class="d-flex" role="search">
+                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" style="border-radius: 20px; padding: 10px;">
+                    <button class="btn btn-outline-light" type="submit" style="border-radius: 20px; padding: 10px 20px; font-weight: bold;">🔍 Search</button>
+                </form>
+            </div>
+        </div>
+    </nav>
+
+
+
+
+<!-- Main form of page -->
+<h1 class="mt-4 my-4 text-center text-success" style="font-size: 2rem; font-weight: bold; text-transform: uppercase; letter-spacing: 1px;">🏥 Early Medicine Recommendation </h1>
+
+{% if session.logged_in %}
+<div class="container my-4 mt-4 p-4" style="background: linear-gradient(135deg, #855f1e, #97a4a6); color: white; border-radius: 15px; box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);">
+    <form action="/predict" method="post">
+        <div class="form-group mb-3">
+            <label for="symptoms" style="font-size: 1.2rem; font-weight: bold;">Select Symptoms:</label>
+            <input type="text" class="form-control" id="symptoms" name="symptoms" placeholder="Type symptoms such as itching, sleeping, aching etc..." style="border-radius: 10px; padding: 12px;">
+        </div>
+        
+        <button type="button" id="startSpeechRecognition" class="btn btn-light" style="margin-left:3px; border:1px solid white; border-radius:20px; padding:10px 20px; font-weight: bold;">
+            🎤 Start Speech Recognition
+        </button>
+        
+        <!-- Display the transcribed text here -->
+         
+        <!-- Display the transcribed text here -->
+        <div name="mysysms" id="transcription"></div>
+
+        <div class="mt-3 p-3" style="background: rgba(132, 78, 78, 0.2); border-radius: 10px; min-height: 40px;"></div>
+        
+        <button type="submit" class="btn btn-danger btn-lg mt-3" style="width: 100%; padding: 14px; font-size: 1.2rem; font-weight: bold; border-radius: 10px;">Predict</button>
+
+    </form>
+</div>
+{% else %}
+<div class="container my-4 mt-4 p-4 text-center" style="background: linear-gradient(135deg, #667eea, #764ba2); color: white; border-radius: 15px; box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);">
+    <h3>🔒 Login Required</h3>
+    <p>Please log in to access the medicine recommendation system.</p>
+    <a href="/login" class="btn btn-light" style="border-radius: 20px; padding: 10px 30px; font-weight: bold; text-decoration: none;">Login Now</a>
+    <div class="mt-3">
+        <p><strong>Demo Account:</strong></p>
+        <p>Email: demo@healthcare.com</p>
+        <p>Password: demo123</p>
+    </div>
+</div>
+{% endif %}
+
+<!-- Improved Responsive UI -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- Results -->
+<h1 class="text-center my-4" style="font-size: 2.5rem; font-weight: bold; color: #333333; text-shadow: 2px 2px 4px rgba(15, 14, 14, 0.2); letter-spacing: 1px;">🔍 AI System Results</h1>
+<div class="container text-center">
+    <div class="row justify-content-center">
+        <!-- Buttons for Modals -->
+        <div class="col-md-4 col-sm-6 my-2">
+            <button class="btn w-100 btn-warning" data-bs-toggle="modal" data-bs-target="#diseaseModal">Disease</button>
+        </div>
+        <div class="col-md-4 col-sm-6 my-2">
+            <button class="btn w-100 btn-primary" data-bs-toggle="modal" data-bs-target="#descriptionModal">Description</button>
+        </div>
+        <div class="col-md-4 col-sm-6 my-2">
+            <button class="btn w-100 btn-info" data-bs-toggle="modal" data-bs-target="#precautionModal">Precaution</button>
+        </div>
+        <div class="col-md-4 col-sm-6 my-2">
+            <button class="btn w-100 btn-danger" data-bs-toggle="modal" data-bs-target="#medicationsModal">Medications</button>
+        </div>
+        <div class="col-md-4 col-sm-6 my-2">
+            <button class="btn w-100 btn-success" data-bs-toggle="modal" data-bs-target="#workoutsModal">Workouts</button>
+        </div>
+        <div class="col-md-4 col-sm-6 my-2">
+            <button class="btn w-100 btn-secondary" data-bs-toggle="modal" data-bs-target="#dietsModal">Diets</button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Template -->
+<div class="modal fade" id="diseaseModal" tabindex="-1" aria-labelledby="diseaseModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-dark text-white">
+                <h5 class="modal-title" id="diseaseModalLabel">Predicted Disease</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p>{{ predicted_disease }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Repeat for Other Modals -->
+<div class="modal fade" id="descriptionModal" tabindex="-1" aria-labelledby="diseaseModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-dark text-white">
+                <h5 class="modal-title">Description</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p>{{ dis_des }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Precaution Modal -->
+<div class="modal fade" id="precautionModal" tabindex="-1" aria-labelledby="diseaseModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-dark text-white">
+                <h5 class="modal-title">Precaution</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <ul>
+                    {% for i in my_precautions %}
+                        <li>{{ i }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Medications Modal -->
+<div class="modal fade" id="medicationsModal" tabindex="-1" aria-labelledby="diseaseModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-dark text-white">
+                <h5 class="modal-title">Medications</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <ul>
+                    {% for i in medications %}
+                        <li>{{ i }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Workouts Modal -->
+<div class="modal fade" id="workoutsModal" tabindex="-1" aria-labelledby="diseaseModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-dark text-white">
+                <h5 class="modal-title">Workouts</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <ul>
+                    {% for i in workout %}
+                        <li>{{ i }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Diets Modal -->
+<div class="modal fade" id="dietsModal" tabindex="-1" aria-labelledby="diseaseModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-dark text-white">
+                <h5 class="modal-title">Diets</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <ul>
+                    {% for i in my_diet %}
+                        <li>{{ i }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+   
+    <!-- Chatbot Icon -->
+<div id="chatbot-icon">
+    <button class="btn btn-glow rounded-circle">💬</button>
+</div>
+
+<!-- Chatbot Window -->
+<div id="chatbot-window">
+    <div class="chat-header">
+        <span><strong>HealthBot 🤖</strong></span>
+        <button class="btn btn-sm btn-close" onclick="closeChatbot()">✖</button>
+    </div>
+    <div id="chatbot-messages" class="chat-messages"></div>
+    <div class="chat-input">
+        <input id="chatbot-input" type="text" class="form-control" placeholder="Type your symptoms...">
+        <button class="btn btn-send" onclick="sendMessage()">➤</button>
+    </div>
+</div>
+
+    <!-- JavaScript for Chatbot and Speech Recognition -->
+    <script>
+        // Chatbot functionality
+        function sendMessage() {
+    const input = document.getElementById("chatbot-input");
+    const userMsg = input.value.trim();
+    const chatBox = document.getElementById("chatbot-messages");
+
+    if (!userMsg) return;
+
+chatBox.innerHTML += `<div class='user-msg'>${userMsg}</div>`;
+
+let reply = "";
+
+const msgLower = userMsg.toLowerCase();
+if (msgLower.includes("hi") || msgLower.includes("hello") || msgLower.includes("hey") || msgLower.includes("good morning") || msgLower.includes("good evening")) {
+    reply = "Hello! How can I assist you today?";
+} else if (msgLower.includes("how are you")) {
+    reply = "I'm doing great, thank you for asking! How about you?";
+} else if (msgLower.includes("what's up") || msgLower.includes("what is up")) {
+    reply = "Not much, just here to help! How can I assist you today?";
+} else if (msgLower.includes("hey there")) {
+    reply = "Hey there! How's it going?";
+} else if (msgLower.includes("greetings")) {
+    reply = "Greetings! How can I help you today?";
+} else if (msgLower.includes("thanks")) {
+    reply = "Most Welcome😍";
+} else if (msgLower.includes("headache")) {
+    reply = "Sounds like a headache. Try staying hydrated and resting.";
+} else if (msgLower.includes("fever")) {
+    reply = "For a fever, drink fluids and take paracetamol if needed.";
+} else if (msgLower.includes("cough")) {
+    reply = "A cough might be due to a cold or flu. Avoid cold drinks.";
+} else if (msgLower.includes("fatigue")) {
+    reply = "Fatigue can be caused by stress, lack of sleep, or dehydration. Try to rest and hydrate.";
+} else if (msgLower.includes("nausea")) {
+    reply = "Nausea might indicate a digestive issue. Consider taking ginger tea or consult a doctor if persistent.";
+} else if (msgLower.includes("dizziness")) {
+    reply = "Dizziness could be from dehydration, low blood pressure, or an inner ear problem. Drink water and rest.";
+} else if (msgLower.includes("sore throat")) {
+    reply = "A sore throat might be due to a viral infection. Drink warm liquids and avoid irritating substances.";
+} else if (msgLower.includes("runny nose")) {
+    reply = "A runny nose is often caused by a cold or allergies. Keep hydrated and avoid irritants.";
+} else if (msgLower.includes("chills")) {
+    reply = "Chills can occur with fever or an infection. Make sure you're warm and monitor your temperature.";
+} else if (msgLower.includes("body aches")) {
+    reply = "Body aches can be a sign of flu or muscle strain. Rest and stay hydrated.";
+} else if (msgLower.includes("shortness of breath")) {
+    reply = "Shortness of breath could indicate respiratory issues. If severe, seek medical attention.";
+} else if (msgLower.includes("chest pain")) {
+    reply = "Chest pain can have many causes, including heart issues. If persistent, seek emergency care.";
+} else if (msgLower.includes("joint pain")) {
+    reply = "Joint pain could be due to arthritis or overuse. Try gentle exercises and consult a doctor if severe.";
+} else if (msgLower.includes("swelling")) {
+    reply = "Swelling may be a sign of injury or fluid retention. Rest the affected area and monitor any changes.";
+} else if (msgLower.includes("indigestion")) {
+    reply = "Indigestion can result from eating too quickly or heavy meals. Try sipping warm water and avoiding acidic foods.";
+} else if (msgLower.includes("vomiting")) {
+    reply = "Vomiting may be caused by a stomach virus or food poisoning. Stay hydrated and avoid solid foods for a while.";
+} else if (msgLower.includes("rash")) {
+    reply = "A rash could be an allergic reaction or skin condition. Keep the area clean and avoid scratching.";
+} else if (msgLower.includes("insomnia")) {
+    reply = "Insomnia could be caused by stress, poor sleep habits, or underlying health issues. Try relaxation techniques before bed.";
+} else if (msgLower.includes("constipation")) {
+    reply = "Constipation is often due to dehydration or lack of fiber. Drink more water and eat fiber-rich foods.";
+} else if (msgLower.includes("diarrhea")) {
+    reply = "Diarrhea can be caused by food poisoning or a virus. Stay hydrated and avoid fatty foods.";
+} else if (msgLower.includes("bloody stool")) {
+    reply = "Seeing blood in your stool should not be ignored. It may indicate a serious issue like hemorrhoids or gastrointestinal problems.";
+} else if (msgLower.includes("urinary urgency")) {
+    reply = "Feeling the urge to urinate frequently could be a sign of a urinary tract infection (UTI). Drink water and consult a doctor.";
+} else if (msgLower.includes("back pain")) {
+    reply = "Back pain might stem from poor posture or muscle strain. Try resting and using heat pads.";
+} else if (msgLower.includes("hives")) {
+    reply = "Hives are often due to allergies or stress. Try antihistamines if necessary, and avoid known allergens.";
+} else if (msgLower.includes("sweating")) {
+    reply = "Excessive sweating could be due to anxiety or a fever. Try to stay cool and hydrated.";
+} else if (msgLower.includes("blurred vision")) {
+    reply = "Blurred vision might be a sign of eye strain or a more serious issue. If persistent, see an eye doctor.";
+} else if (msgLower.includes("mouth sores")) {
+    reply = "Mouth sores can result from viral infections or irritation. Avoid spicy foods and try salt water rinses.";
+} else if (msgLower.includes("cold hands") || msgLower.includes("cold feet")) {
+    reply = "Cold extremities may indicate poor circulation or anxiety. Try warming them up with blankets or clothing.";
+} else if (msgLower.includes("burning sensation")) {
+    reply = "A burning sensation could indicate nerve issues or skin irritation. Observe closely and seek care if it persists.";
+} else if (msgLower.includes("loss of appetite")) {
+    reply = "Loss of appetite can be due to stress or illness. Try small, light meals and monitor how long it lasts.";
+} else if (msgLower.includes("palpitations")) {
+    reply = "Palpitations might feel scary. Try deep breathing. If they continue, get checked for heart rhythm issues.";
+} else if (msgLower.includes("frequent urination")) {
+    reply = "Frequent urination might be a sign of a urinary tract issue or diabetes. Consider a check-up.";
+} else if (msgLower.includes("ear pain")) {
+    reply = "Ear pain could be an infection or pressure issue. Try a warm compress and avoid loud noises.";
+} else if (msgLower.includes("dry skin")) {
+    reply = "Dry skin loves moisturizers. Apply one right after a shower and drink lots of water.";
+} else if (msgLower.includes("eye pain")) {
+    reply = "Eye pain can stem from strain or infection. Rest your eyes and avoid screens for a while.";
+} else if (msgLower.includes("loss of taste")) {
+    reply = "Loss of taste might be due to a cold or COVID-19. Track any other symptoms and rest well.";
+} else if (msgLower.includes("loss of smell")) {
+    reply = "Loss of smell can be a sign of infection or allergy. Monitor it—most recover in a few days.";
+} else if (msgLower.includes("light sensitivity")) {
+    reply = "Sensitivity to light could signal migraines or eye issues. Try dim lights and avoid screens.";
+} else if (msgLower.includes("hair loss")) {
+    reply = "Hair loss can be hormonal or stress-related. Keep a balanced diet and don’t panic—it’s common!";
+} else if (msgLower.includes("pain while urinating")) {
+    reply = "Pain during urination may mean a UTI. Drink lots of water and consult your doctor if it continues.";
+} else if (msgLower.includes("belly pain") || msgLower.includes("abdominal pain")) {
+    reply = "Abdominal pain could be indigestion, gas, or something more. Observe duration and intensity.";
+} else if (msgLower.includes("muscle cramps")) {
+    reply = "Muscle cramps may be due to dehydration. Try stretching and drinking an electrolyte solution.";
+} else if (msgLower.includes("difficulty swallowing")) {
+    reply = "That sounds uncomfortable. It could be a throat infection or acid reflux. Try soft foods and warm water.";
+} else if (msgLower.includes("itchy eyes")) {
+    reply = "Itchy eyes are often allergy-related. Rinse with cold water and avoid rubbing them.";
+} else if (msgLower.includes("tight chest")) {
+    reply = "Chest tightness might be from anxiety or respiratory issues. Stay calm, sit upright, and breathe slowly.";
+} else if (msgLower.includes("wheezing")) {
+    reply = "Wheezing may point to asthma or bronchitis. Avoid allergens and consider using an inhaler if prescribed.";
+} else if (msgLower.includes("depression")) {
+    reply = "Mental health matters. Talk to someone you trust or reach out to a mental health professional.";
+} else if (msgLower.includes("anxiety")) {
+    reply = "Take a deep breath. Try grounding exercises or speak to a counselor if anxiety persists.";
+} else if (msgLower.includes("dry cough")) {
+    reply = "Dry coughs are often viral. Stay hydrated and try warm honey-lemon water.";
+} else if (msgLower.includes("wet cough")) {
+    reply = "A wet cough may indicate mucus buildup. Consider steam inhalation and hydration.";
+} else if (msgLower.includes("bloating")) {
+    reply = "Bloating can follow heavy meals. A brisk walk or ginger tea might help.";
+} else if (msgLower.includes("acid reflux")) {
+    reply = "Reflux can feel like burning. Avoid spicy food and don’t lie down after eating.";
+} else if (msgLower.includes("hot flashes")) {
+    reply = "Hot flashes are common in hormonal shifts. Dress in layers and try cool drinks.";
+} else if (msgLower.includes("numbness")) {
+    reply = "Numbness can be nerve-related. Take breaks from repetitive activities and stretch gently.";
+} else if (msgLower.includes("tingling")) {
+    reply = "Tingling could mean poor circulation or nerve irritation. Try gentle movement and hydration.";
+} else if (msgLower.includes("yellowing skin")) {
+    reply = "Yellowing skin may signal liver issues. Please see a doctor if it persists.";
+} else {
+    reply = "I'm not sure about that symptom. If you're feeling unwell, consulting a healthcare professional is always best.";
+}
+
+
+setTimeout(() => {
+        chatBox.innerHTML += `<div class='bot-msg'>${reply}</div>`;
+        chatBox.scrollTop = chatBox.scrollHeight;
+    }, 500);
+
+    input.value = "";
+}
+
+function closeChatbot() {
+    document.getElementById("chatbot-window").style.display = "none";
+}
+
+document.getElementById("chatbot-icon").addEventListener("click", () => {
+    const chatbot = document.getElementById("chatbot-window");
+    chatbot.style.display = chatbot.style.display === "none" ? "block" : "none";
+});
+
+        // Speech Recognition functionality
+        const startSpeechRecognitionButton = document.getElementById('startSpeechRecognition');
+    const transcriptionDiv = document.getElementById('transcription');
+    const symptomsInput = document.getElementById('symptoms');
+
+    startSpeechRecognitionButton.addEventListener('click', startSpeechRecognition);
+
+    function startSpeechRecognition() {
+        const recognition = new webkitSpeechRecognition(); // Use webkitSpeechRecognition for compatibility
+
+        recognition.lang = 'en-US'; // Set the language for recognition
+
+        recognition.onresult = function (event) {
+            const result = event.results[0][0].transcript;
+            transcriptionDiv.textContent = result;
+            symptomsInput.value = result;  // Update the input field with the transcribed text
+        };
+
+        recognition.onend = function () {
+            console.log('Speech recognition ended.');
+        };
+
+        recognition.start();    }
+    </script>
+
+    <!-- Remove the entire Login Modal Popup section -->
+    
+    <script>
+        // Remove all login popup functionality
+
+        // ...existing code...
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+
+    <script>
+        // Session management
+        function checkSession() {
+            fetch('/check_session')
+                .then(response => response.json())
+                .then(data => {
+                    if (!data.logged_in && window.location.pathname !== '/login') {
+                        // Session expired, redirect to home or show message
+                        console.log('Session expired');
+                    }
+                })
+                .catch(error => console.error('Session check failed:', error));
+        }
+
+        // Check session every 5 minutes
+        setInterval(checkSession, 5 * 60 * 1000);
+
+        // Check session when page loads
+        document.addEventListener('DOMContentLoaded', checkSession);
+    </script>
+</body>
+
+</html>

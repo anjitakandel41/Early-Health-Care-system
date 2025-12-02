@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Healthcare & AI Blog</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* General Styles */
+        body {
+            background: linear-gradient(to bottom, #E3F2FD, #FFFFFF);
+            font-family: 'Poppins', sans-serif;
+            color: #2c3e50;
+        }
+
+        /* Header */
+        .blog-header {
+            background: linear-gradient(to right, #001f3f, #0074E4);
+            color: white;
+            padding: 50px;
+            text-align: center;
+            border-radius: 15px;
+            font-weight: bold;
+            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Blog Container */
+        .blog-container {
+            max-width: 1100px;
+            margin: 40px auto;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+
+        /* Blog Card */
+        .blog-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            transition: 0.3s;
+            width: 48%;
+            margin-bottom: 30px;
+        }
+
+        .blog-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0px 6px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .blog-image {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+        }
+
+        .blog-body {
+            padding: 20px;
+        }
+
+        .blog-title {
+            color: #0074E4;
+            font-weight: bold;
+        }
+
+        .blog-content p {
+            font-size: 16px;
+            line-height: 1.7;
+            text-align: justify;
+        }
+
+        /* Read More */
+        .more-content {
+            display: none;
+        }
+
+        .read-more {
+            color: #F39C12;
+            text-decoration: none;
+            font-weight: bold;
+            cursor: pointer;
+            display: inline-block;
+            margin-top: 10px;
+            font-size: 16px;
+        }
+
+        .read-more:hover {
+            text-decoration: underline;
+        }
+
+        /* Footer */
+        .blog-footer {
+            background: linear-gradient(to right, #001f3f, #0074E4);
+            color: white;
+            text-align: center;
+            padding: 20px;
+            margin-top: 30px;
+            border-radius: 10px;
+            font-weight: bold;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .blog-container {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .blog-card {
+                width: 90%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="blog-header">
+            <h1>Healthcare & AI Blog</h1>
+            <p>Explore the future of healthcare powered by AI</p>
+        </div>
+        
+        <div class="blog-container">
+
+            <!-- Blog Post 1 -->
+            <div class="blog-card">
+                <img src="static/image1.png" class="blog-image" alt="Blog Image">
+                <div class="blog-body">
+                    <h3 class="blog-title">Building a Symptom-Based Disease Diagnosis Web App</h3>
+                    <p class="text-muted">Published on April 11, 2025</p>
+                    <div class="blog-content">
+                        <p>We developed a powerful web app using AI and Flask to predict diseases based on user symptoms...</p>
+                        
+                        <span class="more-content">
+                            This app takes common symptoms and predicts possible diseases using machine learning. It offers a user-friendly interface and is designed to assist both medical professionals and general users.
+                        </span>
+
+                        <a class="read-more">Read More</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Blog Post 2 -->
+            <div class="blog-card">
+                <img src="static/image2.png" class="blog-image" alt="Blog Image">
+                <div class="blog-body">
+                    <h3 class="blog-title">Common Diseases & Their Precautions</h3>
+                    <p class="text-muted">Published on March 25, 2025</p>
+                    <div class="blog-content">
+                        <p>Learn about common diseases like flu, diabetes, and hypertension, and how to prevent them...</p>
+                        
+                        <span class="more-content">
+                            Prevention is key to a healthy life! A balanced diet, exercise, and regular health check-ups can reduce disease risks. Here’s how you can stay safe from common illnesses.
+                        </span>
+
+                        <a class="read-more">Read More</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Blog Post 3 -->
+            <div class="blog-card">
+                <img src="static/image3.png" class="blog-image" alt="Blog Image">
+                <div class="blog-body">
+                    <h3 class="blog-title">How AI is Revolutionizing Healthcare</h3>
+                    <p class="text-muted">Published on February 18, 2025</p>
+                    <div class="blog-content">
+                        <p>AI is transforming healthcare, enabling faster diagnoses and personalized treatments...</p>
+                        
+                        <span class="more-content">
+                            From AI-powered diagnosis tools to robotic surgeries, AI is enhancing patient outcomes and reducing medical errors. This article explores the impact of AI in medicine.
+                        </span>
+
+                        <a class="read-more">Read More</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Blog Post 4 -->
+            <div class="blog-card">
+                <img src="static/image4.png" class="blog-image" alt="Blog Image">
+                <div class="blog-body">
+                    <h3 class="blog-title">The Future of AI-Powered Diagnosis</h3>
+                    <p class="text-muted">Published on January 10, 2025</p>
+                    <div class="blog-content">
+                        <p>AI is leading the way in diagnosing diseases early with advanced algorithms and deep learning...</p>
+                        
+                        <span class="more-content">
+                            The latest innovations in AI allow for real-time patient monitoring, predictive analytics, and personalized treatments. The future of medicine is AI-driven!
+                        </span>
+
+                        <a class="read-more">Read More</a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Footer -->
+        <div class="blog-footer">
+            <p>&copy; 2025 AI HealthTech | Your Guide to AI in Healthcare</p>
+        </div>
+    </div>
+
+    <script>
+        document.querySelectorAll('.read-more').forEach(button => {
+            button.addEventListener('click', function(event) {
+                event.preventDefault();
+                this.previousElementSibling.style.display = "inline";
+                this.style.display = "none";
+            });
+        });
+    </script>
+
+</body>
+</html>
